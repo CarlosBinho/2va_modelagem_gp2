@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Cubo de dados do Data Warehouse dw_snis_financeiro (Pentaho Schema Workbench / Mondrian 3)
+  UFRPE - Modelagem de Dados - 2a VA - Grupo 2
+  Fato: fato_financeiro_anual | 6 dimensoes | 5 medidas aditivas + 2 membros calculados
+  Atencao analitica: filtrar sempre a dimensao Componente; totais, subtotais e parcelas
+  coexistem como membros e nao devem ser somados entre si. "Creditos a receber" e saldo
+  (nao somar entre anos).
+-->
+<Schema name="DW_SNIS_Financeiro" description="Estrela unica financeira do SNIS (1995-2022)">
+
+  <Cube name="Financeiro_SNIS" caption="Financeiro do Saneamento (SNIS)" visible="true" cache="true" enabled="true"
+        description="Montantes financeiros declarados por municipio, ano, rubrica e esfera">
+    <Table name="fato_financeiro_anual"/>
+
+    <!-- ================================ Dimensao Tempo ================================ -->
+    <Dimension type="TimeDimension" name="Tempo" caption="Tempo" foreignKey="sk_tempo">
+      <Hierarchy name="Calendario" caption="Calendario" hasAll="true" allMemberName="Todos os anos"
+                 primaryKey="sk_tempo">
+        <Table name="dim_tempo"/>
+        <Level name="Seculo" caption="Seculo" column="seculo" type="Integer" uniqueMembers="true"
+               levelType="TimeYears" hideMemberIf="Never"/>
+        <Level name="Decada" caption="Decada" column="decada" type="Integer" uniqueMembers="true"
+               levelType="TimeYears" hideMemberIf="Never"/>
+        <Level name="Quinquenio" caption="Quinquenio" column="quinquenio_inicio" type="Integer" uniqueMembers="true"
+               levelType="TimeYears" hideMemberIf="Never"/>
+        <Level name="Ano" caption="Ano" column="ano" nameColumn="rotulo_ano" type="Integer" uniqueMembers="true"
+               levelType="TimeYears" hideMemberIf="Never"/>
+      </Hierarchy>
+      <Hierarchy name="Marco_Regulatorio" caption="Marco regulatorio" hasAll="true"
+                 allMemberName="Todos os periodos" primaryKey="sk_tempo">
+        <Table name="dim_tempo"/>
+        <Level name="Periodo_Marco_Legal" caption="Periodo do Marco Legal (Lei 14.026/2020)"
+               column="periodo_marco_legal" type="String" uniqueMembers="true" levelType="TimeYears"/>
+        <Level name="Periodo_PLANSAB" caption="Periodo do PLANSAB" column="periodo_plansab" type="String"
+               uniqueMembers="false" levelType="TimeYears"/>
+        <Level name="Ano" caption="Ano" column="ano" nameColumn="rotulo_ano" type="Integer"
+               uniqueMembers="true" levelType="TimeYears"/>
+      </Hierarchy>
+    </Dimension>
+
+    <!-- ============================== Dimensao Localidade ============================= -->
+    <Dimension type="StandardDimension" name="Localidade" caption="Localidade" foreignKey="sk_localidade">
+      <Hierarchy name="Geografia" caption="Regiao > UF > Municipio" hasAll="true" allMemberName="Brasil"
+                 primaryKey="sk_localidade">
+        <Table name="dim_localidade"/>
+        <Level name="Regiao" caption="Regiao" column="nome_regiao" type="String" uniqueMembers="true"
+               levelType="Regular" hideMemberIf="Never"/>
+        <Level name="UF" caption="UF" column="sigla_uf" nameColumn="sigla_uf" type="String" uniqueMembers="true"
+               levelType="Regular" hideMemberIf="Never">
+          <Property name="Nome da UF" column="nome_uf" type="String"/>
+        </Level>
+        <Level name="Municipio" caption="Municipio" column="codigo_ibge" nameColumn="nome_municipio" type="String"
+               uniqueMembers="true" levelType="Regular" hideMemberIf="Never">
+          <Property name="Codigo IBGE" column="codigo_ibge" type="String"/>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+
+    <!-- ============================== Dimensao Componente ============================= -->
+    <Dimension type="StandardDimension" name="Componente" caption="Componente (rubrica financeira)"
+               foreignKey="sk_componente">
+      <Hierarchy name="Rubricas" caption="Grupo > Papel > Rubrica" hasAll="true"
+                 allMemberName="Todas as rubricas" primaryKey="sk_componente">
+        <Table name="dim_componente"/>
+        <Level name="Grupo_Financeiro" caption="Grupo financeiro" column="grupo_financeiro" type="String"
+               uniqueMembers="true" levelType="Regular"/>
+        <Level name="Papel_Analitico" caption="Papel analitico" column="papel_analitico" type="String"
+               uniqueMembers="false" levelType="Regular"/>
+        <Level name="Rubrica" caption="Rubrica" column="codigo_componente" nameColumn="nome_componente"
+               type="String" uniqueMembers="true" levelType="Regular">
+          <Property name="Natureza do valor" column="natureza_valor" type="String"/>
+          <Property name="Regra temporal" column="regra_temporal" type="String"/>
+          <Property name="Regra de agregacao" column="regra_agregacao" type="String"/>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+
+    <!-- ================================ Dimensao Esfera =============================== -->
+    <Dimension type="StandardDimension" name="Esfera" caption="Esfera" foreignKey="sk_esfera">
+      <Hierarchy name="Esfera" hasAll="true" allMemberName="Todas as esferas" primaryKey="sk_esfera">
+        <Table name="dim_esfera"/>
+        <Level name="Esfera" caption="Esfera" column="codigo_esfera" nameColumn="nome_esfera" type="String"
+               uniqueMembers="true" levelType="Regular">
+          <Property name="Descricao" column="descricao_esfera" type="String"/>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+
+    <!-- ========================= Dimensao Porte do Municipio ========================== -->
+    <Dimension type="StandardDimension" name="Porte" caption="Porte do municipio" foreignKey="sk_porte_municipio">
+      <Hierarchy name="Porte" hasAll="true" allMemberName="Todos os portes" primaryKey="sk_porte_municipio">
+        <Table name="dim_porte_municipio"/>
+        <Level name="Porte" caption="Porte" column="codigo_porte" nameColumn="nome_porte"
+               ordinalColumn="ordem_porte" type="String" uniqueMembers="true" levelType="Regular">
+          <Property name="Faixa populacional" column="faixa_populacional_descricao" type="String"/>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+
+    <!-- =========================== Dimensao Faixa de Valor ============================ -->
+    <Dimension type="StandardDimension" name="Faixa_Valor" caption="Faixa de valor" foreignKey="sk_faixa_valor">
+      <Hierarchy name="Faixa_Valor" hasAll="true" allMemberName="Todas as faixas" primaryKey="sk_faixa_valor">
+        <Table name="dim_faixa_valor"/>
+        <Level name="Faixa" caption="Faixa de valor" column="codigo_faixa" nameColumn="nome_faixa"
+               ordinalColumn="ordem_faixa" type="String" uniqueMembers="true" levelType="Regular">
+          <Property name="Limite inferior (R$)" column="limite_inferior_rs" type="Numeric"/>
+          <Property name="Limite superior (R$)" column="limite_superior_rs" type="Numeric"/>
+        </Level>
+      </Hierarchy>
+    </Dimension>
+
+    <!-- ==================================== Medidas =================================== -->
+    <Measure name="Valor Informado (R$)" column="valor_informado_rs" datatype="Numeric" aggregator="sum"
+             formatString="#,##0.00" visible="true"/>
+    <Measure name="Valor Informado (R$ mil)" column="valor_informado_rs_milhares" datatype="Numeric"
+             aggregator="sum" formatString="#,##0.00" visible="true"/>
+    <Measure name="Valor Absoluto (R$)" column="valor_absoluto_rs" datatype="Numeric" aggregator="sum"
+             formatString="#,##0.00" visible="true"/>
+    <Measure name="Quantidade de Registros" column="quantidade_registros" datatype="Integer" aggregator="sum"
+             formatString="#,##0" visible="true"/>
+    <Measure name="Quantidade de Valores Positivos" column="quantidade_valores_positivos" datatype="Integer"
+             aggregator="sum" formatString="#,##0" visible="true"/>
+
+    <CalculatedMember name="Percentual de Valores Positivos" dimension="Measures" visible="true"
+                      formula="IIf([Measures].[Quantidade de Registros] = 0, NULL, [Measures].[Quantidade de Valores Positivos] / [Measures].[Quantidade de Registros])">
+      <CalculatedMemberProperty name="FORMAT_STRING" value="0.00%"/>
+    </CalculatedMember>
+    <CalculatedMember name="Valor Medio por Registro (R$)" dimension="Measures" visible="true"
+                      formula="IIf([Measures].[Quantidade de Registros] = 0, NULL, [Measures].[Valor Informado (R$)] / [Measures].[Quantidade de Registros])">
+      <CalculatedMemberProperty name="FORMAT_STRING" value="#,##0.00"/>
+    </CalculatedMember>
+  </Cube>
+
+</Schema>
