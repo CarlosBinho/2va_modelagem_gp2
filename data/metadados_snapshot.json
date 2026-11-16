@@ -1,0 +1,11 @@
+{
+  "origem": "Snapshot gerado a partir do arquivo oficial do SNIS com as regras do ETL do dw_snis_financeiro",
+  "gerado_em": "09/11/2026 22:47",
+  "linhas_fato_representadas": 3301298,
+  "valores_positivos": 1835427,
+  "valores_zerados": 1454952,
+  "valores_negativos": 10919,
+  "combinacoes_municipio_ano": 99067,
+  "linhas_cubo_uf": 154885,
+  "linhas_cubo_municipio": 651547
+}

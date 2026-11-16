@@ -1,0 +1,6 @@
+codigo_porte,nome_porte,faixa_populacional_descricao,ordem_porte
+PEQUENO,Pequeno porte,Até 20.000 habitantes urbanos declarados,1
+MEDIO,Médio porte,De 20.001 a 100.000 habitantes urbanos declarados,2
+GRANDE,Grande porte,De 100.001 a 900.000 habitantes urbanos declarados,3
+METROPOLE,Metrópole,Acima de 900.000 habitantes urbanos declarados,4
+NAO_INFORMADO,Porte não informado,População urbana ausente na declaração anual da fonte,5

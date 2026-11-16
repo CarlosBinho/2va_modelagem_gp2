@@ -1,0 +1,5 @@
+codigo_esfera,nome_esfera,descricao_esfera
+PRESTADOR,Prestador de serviços,Investimento realizado pelo prestador dos serviços de água e esgoto
+MUNICIPIO,Município,Investimento realizado pelo município (administração direta)
+ESTADO,Estado,Investimento realizado pelo governo estadual
+NAO_SE_APLICA,Não se aplica,"Receitas, despesas e créditos não possuem divisão por esfera na fonte SNIS"
