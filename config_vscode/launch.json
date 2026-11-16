@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Dashboard DW SNIS (app.py)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": { "DW_FONTE": "auto" },
+      "justMyCode": true
+    },
+    {
+      "name": "Dashboard DW SNIS (somente snapshot)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": { "DW_FONTE": "snapshot" }
+    },
+    {
+      "name": "Exportar snapshot do MySQL",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/exportar_snapshot_do_dw.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

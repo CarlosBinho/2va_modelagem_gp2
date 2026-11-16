@@ -1,0 +1,7 @@
+# Copie para variáveis de ambiente (ou edite direto em dw_dados.py)
+DW_FONTE=auto            # auto | mysql | snapshot
+DW_MYSQL_USER=root
+DW_MYSQL_PASS=sua_senha_aqui
+DW_MYSQL_HOST=localhost
+DW_MYSQL_PORT=3306
+DW_MYSQL_DB=dw_snis_financeiro
