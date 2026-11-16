@@ -1,0 +1,8 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+*.xlsx
+*.csv.bak
+DashboardDWSNIS/
