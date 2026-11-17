@@ -7,6 +7,10 @@ Dashboard OLAP em **Python + Plotly Dash** conectado via **SQLAlchemy + PyMySQL*
 **`dw_snis_financeiro`** (Estrela Única: `fato_financeiro_anual` + 6 dimensões), seguindo o roteiro da aula
 *MD12 — OLAP com Dash*.
 
+
+**Dashboard online:** https://dw-snis-grupo2.onrender.com/  
+*(plano gratuito do Render: o primeiro acesso após um tempo parado pode levar cerca de 1 minuto)*
+
 ---
 
 ## 1. Estrutura da pasta
